@@ -1,0 +1,71 @@
+CREATE TABLE target_types
+(target_type_id INTEGER NOT NULL,
+target_name VARCHAR(255) NOT NULL,
+PRIMARY KEY (target_type_id));
+
+CREATE TABLE roles
+(role_id INTEGER NOT NULL,
+role_type_name VARCHAR(20) NOT NULL,
+PRIMARY KEY (role_id));
+
+CREATE TABLE event_types
+(event_type_id INTEGER NOT NULL,
+event_type_name VARCHAR (20) NOT NULL,
+PRIMARY KEY (event_type_id));
+
+CREATE TABLE faculty
+(faculty_id INTEGER NOT NULL,
+faculty_name VARCHAR(50) NOT NULL,
+PRIMARY KEY (faculty_id));
+
+CREATE TABLE depts
+(dept_id INTEGER NOT NULL,
+dept_name VARCHAR(20) NOT NULL,
+PRIMARY KEY (dept_id));
+
+CREATE TABLE targets
+(target_id INTEGER NOT NULL,
+target_name VARCHAR(255) NOT NULL,
+target_type_id INTEGER NOT NULL,
+tier INTEGER NULL,
+PRIMARY KEY (target_id),
+FOREIGN KEY (target_type_id) REFERENCES target_types (target_type_id));
+
+CREATE TABLE papers
+(paper_id INTEGER NOT NULL,
+title VARCHAR(255) NOT NULL,
+target_id INTEGER NOT NULL,
+PRIMARY KEY (paper_id),
+FOREIGN KEY (target_id) REFERENCES targets (target_id));
+
+CREATE TABLE faculty_dept
+(faculty_id INTEGER NOT NULL,
+dept_id INTEGER NOT NULL,
+PRIMARY KEY (faculty_id, dept_id),
+FOREIGN KEY (faculty_id) REFERENCES faculty (faculty_id),
+FOREIGN KEY (dept_id) REFERENCES depts (dept_id));
+
+CREATE TABLE faculty_papers
+(faculty_id INTEGER NOT NULL,
+paper_id INTEGER NOT NULL,
+role_id INTEGER NOT NULL,
+PRIMARY KEY (faculty_id, paper_id),
+FOREIGN KEY (faculty_id) REFERENCES faculty (faculty_id),
+FOREIGN KEY (paper_id) REFERENCES papers (paper_id),
+FOREIGN KEY (role_id) REFERENCES roles (role_id));
+
+CREATE TABLE paper_coauthors
+(paper_id INTEGER NOT NULL,
+coauthor_name VARCHAR(50) NOT NULL,
+PRIMARY KEY (paper_id, coauthor_name),
+FOREIGN KEY (paper_id) REFERENCES papers (paper_id));
+
+CREATE TABLE events
+(event_id INTEGER NOT NULL,
+event_type_id INTEGER NOT NULL,
+paper_id INTEGER NOT NULL,
+event_date DATE NOT NULL,
+PRIMARY KEY (event_id),
+FOREIGN KEY (event_type_id) references event_types(event_type_id),
+FOREIGN KEY (paper_id) REFERENCES papers (paper_id));
+
